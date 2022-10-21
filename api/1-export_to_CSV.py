@@ -13,9 +13,10 @@ if __name__ == "__main__":
     link = "https://jsonplaceholder.typicode.com/users/{}/todos".format(num)
     res = requests.get(link)
     todos = json.loads(res.text)
-    data = [{"task": i["title"],
-             "completed": i["completed"],
-             "username": user["username"]} for i in todos]
-    json_data = json.dumps({"{}".format(user["id"]): data})
-    with open("{}.json".format(user["id"]), 'w', encoding='utf-8') as f:
-        f.write(json_data)
+    csv_data = [["{}".format(i["userId"]),
+                user["username"],
+                "{}".format(i["completed"]),
+                 i["title"]] for i in todos]
+    with open("{}.csv".format(user["id"]), 'w', encoding='utf-8') as f:
+        writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+        writer.writerows(csv_data)
